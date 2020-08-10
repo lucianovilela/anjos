@@ -1,5 +1,5 @@
 {
-  "name": "Anjos",
+  "name": "consulta-de-anjos-funcionando",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
@@ -45,8 +45,9 @@
       "last 1 safari version"
     ]
   },
-  "description": "An Ionic project",
+  "description": "",
   "devDependencies": {
     "@capacitor/cli": "1.5.1"
-  }
+  },
+  "keywords": []
 }
