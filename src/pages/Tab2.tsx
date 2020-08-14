@@ -1,23 +1,80 @@
-import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab2.css';
+import React from "react";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonAvatar,
+  IonInput,
+  IonButton,
+  IonSearchbar,
+  IonImg,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent
+} from "@ionic/react";
+//import ExploreContainer from '../components/ExploreContainer';
+import "./Tab2.css";
+import moment from "moment";
+import { useState } from "react";
 
 const Tab2: React.FC = () => {
+  const handleChange = async (e) => {
+    const consulta = await fetch(
+      `https://signos-celebridades.herokuapp.com/celeb/${text}`
+    ).then((r) => r.json());
+    console.debug(consulta);
+    if (!consulta.error) setResult(consulta);
+  };
+  const [text, setText] = useState<string>();
+  const [result, setResult] = useState();
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 2</IonTitle>
+          <IonTitle>Signos</IonTitle>
+          <IonSearchbar
+            placeholder="Pesquisa"
+            inputMode="search"
+            value={text}
+            onIonInput={(e) => {
+              setText(e?.target?.value);
+            }}
+            debounce={10000}
+            enterkeyhint="enter"
+          />
+          <IonButton onClick={handleChange}>Pesquisa</IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 2</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 2 page" />
+        {result ? (
+          <IonCard>
+            <IonCardHeader>
+              <IonAvatar>
+                <IonImg src={result.imagem} />
+              </IonAvatar>
+              <IonCardTitle>{result.nome}</IonCardTitle>
+            </IonCardHeader>
+            <IonCardContent>
+              <IonItem>
+                <IonLabel>{result.signo}</IonLabel>
+              </IonItem>
+
+              <IonItem>
+                <IonLabel>
+                  {moment(result.dataNascimento).format("DD/MM/YYYY")}
+                </IonLabel>
+              </IonItem>
+            </IonCardContent>
+          </IonCard>
+        ) : (
+          <></>
+        )}
       </IonContent>
     </IonPage>
   );
