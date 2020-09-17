@@ -41,9 +41,9 @@ const Tab2: React.FC = () => {
           <IonSearchbar
             placeholder="Pesquisa"
             inputMode="search"
-            value={text}
-            onIonInput={(e) => {
-              setText(e?.target?.value);
+            
+            onIonChange={(e) => {
+              setText(e.detail.value);
             }}
             debounce={10000}
             enterkeyhint="enter"

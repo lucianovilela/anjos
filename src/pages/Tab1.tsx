@@ -21,7 +21,7 @@ import { DB } from "../db/db";
 import { getSalmos } from "../db/salmos";
 
 const Tab1: React.FC = () => {
-  const [result, setResult] = useState<[]>([]);
+  const [result, setResult] = useState<any>();
   const handleChange = value => {
     let date = new Date(value);
     let valor =
@@ -29,14 +29,10 @@ const Tab1: React.FC = () => {
       "/" +
       (date.getMonth() + 1 + "").padStart(2, "0");
     console.debug(valor);
-    setResult(
-      DB.filter(anjo => {
-        return anjo.DN.includes(valor);
-      })
-    );
+    setResult(  DB.filter(anjo =>  anjo.DN.includes(valor))  );
   };
 
-  const itens = result.map(i => (
+  const itens = result?.map(i => (
     <IonItem>
       <IonLabel>
         <IonText color="primary">
@@ -51,7 +47,7 @@ const Tab1: React.FC = () => {
         <IonLabel>
           <pre>
             {i.SALMO.split(",").map(id => (
-              <IonText>{getSalmos(id * 1).texto}</IonText>
+              <IonText>{getSalmos(id * 1)?.texto}</IonText>
             ))}
           </pre>
         </IonLabel>

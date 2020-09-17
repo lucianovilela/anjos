@@ -1,4 +1,11 @@
-export const DB = [{
+interface ANJO{
+    ANJO:string;
+    QUALIDADE:string;
+    PRINCIPE:string;
+    DN:string;
+    SALMO:string;
+}
+export const DB:ANJO[] = [{
         ANJO: "VEHUIAH",
         QUALIDADE: "SERAFIM",
         PRINCIPE: "METATRON",
