@@ -1,52 +1,75 @@
-import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
-  IonList, IonItem, IonLabel, IonAvatar, IonInput } from '@ionic/react';
-//import ExploreContainer from '../components/ExploreContainer';
-import './Tab1.css';
-import { useContext, useState } from 'react';
-import { DB }  from '../db/db'
-import { SALMOS } from '../db/salmos'
-import { ConsoleWriter } from 'istanbul-lib-report';
+import React from "react";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonAvatar,
+  IonInput,
+  IonText,
+  IonDatetime
+} from "@ionic/react";
 
+//import ExploreContainer from '../components/ExploreContainer';
+import "./Tab1.css";
+import { useState } from "react";
+import { DB } from "../db/db";
+import { getSalmos } from "../db/salmos";
 
 const Tab1: React.FC = () => {
-  const [text, setText] = useState<string>();
-  const handleChange = event => {
-    setText(event.target.value);
+  const [result, setResult] = useState<[]>([]);
+  const handleChange = value => {
+    let date = new Date(value);
+    let valor =
+      (date.getDate() + "").padStart(2, "0") +
+      "/" +
+      (date.getMonth() + 1 + "").padStart(2, "0");
+    console.debug(valor);
+    setResult(
+      DB.filter(anjo => {
+        return anjo.DN.includes(valor);
+      })
+    );
   };
-  const result = !text?
-  DB:
-  DB.filter(anjo =>{ 
-    if(text.match(/\d+\/?\d+/)){
-      return anjo.DN.includes(text);
-    }
-    else{
-      return anjo.ANJO.toLowerCase().includes(text.toLowerCase());
-    }
-  });
-  
-  const itens =  result.map((i)=>
-    <IonItem>
-      <IonAvatar>
-      </IonAvatar>
-      <IonLabel>
-        <h1>{i.ANJO}</h1>
-        <h2>{i.QUALIDADE}</h2>   
-        <p>{i.DN}</p> 
-        <p>{i.PRINCIPE}</p>
-        <p>{i.SALMO}</p>
-      </IonLabel>    
-    </IonItem>
-  
-  );
 
+  const itens = result.map(i => (
+    <IonItem>
+      <IonLabel>
+        <IonText color="primary">
+          <h1>{i.ANJO}</h1>
+        </IonText>
+        <IonText color="secondary">
+          <h2>Qualidade:{i.QUALIDADE}</h2>
+        </IonText>
+        <IonText color="medium">
+          <p>Principe:{i.PRINCIPE}</p>
+        </IonText>
+        <IonLabel>
+          <pre>
+            {i.SALMO.split(",").map(id => (
+              <IonText>{getSalmos(id * 1).texto}</IonText>
+            ))}
+          </pre>
+        </IonLabel>
+      </IonLabel>
+    </IonItem>
+  ));
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Anjos</IonTitle>
-          <IonInput placeholder="Pesquisa" clearInput inputMode="search" value={text} onIonChange={handleChange}/>
+          <IonDatetime
+            displayFormat="DD/MMMM"
+            //value={text}
+            placeholder="Dia/Mes"
+            onIonChange={e => handleChange(e.detail.value)}
+          />
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -55,9 +78,7 @@ const Tab1: React.FC = () => {
             <IonTitle size="large">Anjos</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList >
-          {itens}
-        </IonList>
+        <IonList>{itens}</IonList>
       </IonContent>
     </IonPage>
   );
